@@ -13,6 +13,7 @@ and *applies* it into `$HOME` — no symlinks.
 | `dot_tmux.conf` → `~/.tmux.conf` | tmux config |
 | `dot_config/ghostty/config` → `~/.config/ghostty/config` | Ghostty terminal |
 | `dot_claude/settings.json` → `~/.claude/settings.json` | Claude Code settings |
+| `dot_gitconfig` → `~/.gitconfig` | Git config (credential helper, `useHttpPath`, default branch) |
 
 chezmoi maps `dot_` prefixes to leading dots. List managed files with `chezmoi managed`.
 
@@ -67,6 +68,10 @@ git config --global credential.https://github.com.useHttpPath true
 Now git keys credentials by full path (`github.com/ys-wu/dotfiles`), so each repo carries
 its own PAT. For a new repo: create a PAT scoped to it, then the first `git push` prompts
 for username + that repo's PAT (paste the token as the password); subsequent pushes are silent.
+
+This setting (and `credential.helper`, `init.defaultBranch`) lives in `~/.gitconfig`, which is
+tracked here — so `chezmoi init --apply ys-wu` restores this git behavior on a new machine too.
+The PAT itself is **not** in `.gitconfig` (it's in the keychain), so nothing secret is committed.
 
 ## PAT management
 
