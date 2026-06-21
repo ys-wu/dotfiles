@@ -1,0 +1,6 @@
+[credential]
+	helper = osxkeychain
+[credential "https://github.com"]
+	useHttpPath = true
+[init]
+	defaultBranch = main
