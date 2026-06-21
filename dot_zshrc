@@ -1,0 +1,56 @@
+# ============================================================
+# Powerlevel10k instant prompt — must stay at the very top
+# ============================================================
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ============================================================
+# PATH
+# ============================================================
+# Keep only the first occurrence of each PATH entry. Must come
+# before the prepends below so later duplicates are dropped.
+typeset -U path PATH
+
+# Homebrew — must run AFTER /etc/zprofile's path_helper so that
+# /opt/homebrew/bin lands ahead of /usr/bin. Otherwise Apple's
+# /usr/bin/git shadows the newer brew git. .zshrc is sourced
+# after /etc/zprofile, so prepending here sticks.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Personal scripts — prepended last so they win over brew packages.
+export PATH="$HOME/.local/bin:$PATH"
+
+# ============================================================
+# Vi mode + cursor shape
+# ============================================================
+bindkey -v
+export KEYTIMEOUT=1
+
+# vi-mode cursor shape: block = normal, beam = insert
+function zle-keymap-select {
+  case $KEYMAP in
+    vicmd)      echo -ne '\e[2 q';;  # normal → block
+    viins|main) echo -ne '\e[6 q';;  # insert → beam
+  esac
+}
+zle -N zle-keymap-select
+function zle-line-init { echo -ne '\e[6 q'; }
+zle -N zle-line-init
+function _vi_beam_cursor { echo -ne '\e[6 q'; }
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _vi_beam_cursor
+
+# ============================================================
+# nvm
+# ============================================================
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ============================================================
+# Powerlevel10k theme — keep these last
+# ============================================================
+source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+

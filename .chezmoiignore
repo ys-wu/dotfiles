@@ -1,0 +1,33 @@
+# Safety guardrail: never manage these even if accidentally `chezmoi add`-ed.
+# Secrets / credentials
+.ssh/id_*
+.ssh/*.pem
+.ssh/known_hosts*
+.claude.json
+.claude.json.backup
+.claude/.credentials*
+.aws/credentials
+.netrc
+*.key
+*.pem
+
+# Noisy / machine-local Claude state (not worth backing up)
+.claude/cache
+.claude/sessions
+.claude/session-env
+.claude/projects
+.claude/shell-snapshots
+.claude/file-history
+.claude/history.jsonl
+.claude/backups
+.claude/downloads
+.claude/plugins
+
+# History / caches / sockets
+.zsh_history
+.zsh_sessions
+.zcompdump*
+.node_repl_history
+.viminfo
+*.sock
+.DS_Store
