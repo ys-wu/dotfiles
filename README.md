@@ -14,6 +14,7 @@ and *applies* it into `$HOME` — no symlinks.
 | `dot_config/ghostty/config` → `~/.config/ghostty/config` | Ghostty terminal |
 | `dot_claude/settings.json` → `~/.claude/settings.json` | Claude Code settings |
 | `dot_gitconfig` → `~/.gitconfig` | Git config (credential helper, `useHttpPath`, default branch) |
+| `…/Code/User/settings.json` → VSCode user settings | Editor + integrated-terminal font (Nerd Font) |
 
 chezmoi maps `dot_` prefixes to leading dots. List managed files with `chezmoi managed`.
 
