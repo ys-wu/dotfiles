@@ -1,0 +1,18 @@
+#!/bin/bash
+# Install everything in the Brewfile.
+# run_onchange_ -> re-runs only when this script's content changes.
+# The hash line below embeds the Brewfile's checksum, so editing the
+# Brewfile changes this script and triggers a re-run on the next apply.
+#
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+set -euo pipefail
+
+# A freshly-installed Homebrew isn't on PATH in this subprocess yet, so source it.
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+echo "Running brew bundle..."
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"

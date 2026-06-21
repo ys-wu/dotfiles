@@ -1,6 +1,7 @@
 # Repo meta-files: live in the git repo but must NOT be applied to $HOME.
 README.md
 docs
+Brewfile
 
 # Safety guardrail: never manage these even if accidentally `chezmoi add`-ed.
 # Secrets / credentials
