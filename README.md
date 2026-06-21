@@ -45,10 +45,23 @@ No auto-commit / auto-push — pushing is always a deliberate, reviewed step.
 ## Restore on a new machine
 
 ```bash
-# 1. install chezmoi (e.g. `brew install chezmoi`)
-# 2. pull + apply in one shot:
-chezmoi init --apply ys-wu
+# 1. install chezmoi (e.g. via the standalone installer — no brew needed yet):
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ys-wu
 ```
+
+On first apply, two scripts bootstrap the machine **before** dotfiles are written:
+
+| Script | Prefix meaning | Does |
+|--------|----------------|------|
+| `run_once_before_00-install-homebrew.sh` | run once, before | installs Homebrew if missing (`NONINTERACTIVE=1`) |
+| `run_onchange_before_10-brew-bundle.sh.tmpl` | re-run on change, before | runs `brew bundle` against `Brewfile` |
+
+`Brewfile` lists all packages/casks (regenerate with `brew bundle dump --force`). The
+bundle script embeds the Brewfile's hash, so it re-runs only when the package list changes.
+`00`/`10` ordering guarantees Homebrew is installed before `brew bundle` runs.
+
+> Note: `chezmoi apply` / `chezmoi update` on an existing machine will run the bundle
+> script when the Brewfile changes — this is idempotent (brew just installs what's missing).
 
 ## Auth model (HTTPS + repo-scoped PAT)
 
