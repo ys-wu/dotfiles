@@ -1,3 +1,6 @@
 font-family = "MesloLGS NF"
 theme = Catppuccin Mocha
 window-inherit-working-directory = false
+tab-inherit-working-directory = false
+split-inherit-working-directory = false
+working-directory = home
