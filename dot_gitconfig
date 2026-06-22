@@ -1,3 +1,6 @@
+[user]
+	name = Yusheng Wu
+	email = im.yushengwu@gmail.com
 [credential]
 	helper = osxkeychain
 [credential "https://github.com"]
