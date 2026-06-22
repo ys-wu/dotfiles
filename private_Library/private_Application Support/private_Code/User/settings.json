@@ -1,4 +1,12 @@
 {
     "workbench.startupEditor": "none",
-    "terminal.integrated.fontFamily": "MesloLGS Nerd Font"
+    "terminal.integrated.fontFamily": "MesloLGS Nerd Font",
+    "vim.useSystemClipboard": true,
+    "vim.hlsearch": true,
+    "vim.leader": "<space>",
+    "vim.handleKeys": {
+        "<C-c>": false,
+        "<C-v>": false
+    },
+    "editor.lineNumbers": "relative"
 }
