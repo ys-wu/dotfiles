@@ -55,10 +55,29 @@ On first apply, two scripts bootstrap the machine **before** dotfiles are writte
 |--------|----------------|------|
 | `run_once_before_00-install-homebrew.sh` | run once, before | installs Homebrew if missing (`NONINTERACTIVE=1`) |
 | `run_onchange_before_10-brew-bundle.sh.tmpl` | re-run on change, before | runs `brew bundle` against `Brewfile` |
+| `run_once_after_20-install-claude-code.sh` | run once, after | installs Claude Code via its native installer (see below) |
 
 `Brewfile` lists all packages/casks (regenerate with `brew bundle dump --force`). The
 bundle script embeds the Brewfile's hash, so it re-runs only when the package list changes.
-`00`/`10` ordering guarantees Homebrew is installed before `brew bundle` runs.
+`00`/`10`/`20` ordering guarantees Homebrew is installed before `brew bundle`, which runs
+before the Claude Code install.
+
+### Deliberately *not* in the Brewfile, and why
+
+The deciding factor is **self-updating vs. not**, not "downloaded vs. brew." Apps with their
+own auto-updaters keep updating themselves no matter how they were installed, and a brew cask
+can then fight the app's built-in updater (brew thinks it's stale; the app already updated).
+
+- **Claude Code** — a `claude-code` cask exists, but Claude Code self-updates and the
+  **native installer is the recommended channel**. It's installed by
+  `run_once_after_20-install-claude-code.sh` (`curl … claude.ai/install.sh`), kept out of the
+  Brewfile on purpose so its updater isn't fought by brew.
+- **Chrome, Claude desktop** — available as casks (`google-chrome`, `claude`) but left out;
+  they self-update aggressively. Add them only if fresh-machine convenience outweighs the
+  brew-vs-self-updater noise. Low stakes either way.
+
+In the Brewfile (low-conflict, no aggressive self-updater, clean from brew): `1password`,
+`1password-cli`, `shottr`.
 
 > Note: `chezmoi apply` / `chezmoi update` on an existing machine will run the bundle
 > script when the Brewfile changes — this is idempotent (brew just installs what's missing).
