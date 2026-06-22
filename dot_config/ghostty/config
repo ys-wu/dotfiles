@@ -1,4 +1,4 @@
-font-family = "MesloLGS NF"
+font-family = "MesloLGS Nerd Font"
 theme = Catppuccin Mocha
 window-inherit-working-directory = false
 tab-inherit-working-directory = false
