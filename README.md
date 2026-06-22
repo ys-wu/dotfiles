@@ -56,6 +56,7 @@ On first apply, two scripts bootstrap the machine **before** dotfiles are writte
 | `run_once_before_00-install-homebrew.sh` | run once, before | installs Homebrew if missing (`NONINTERACTIVE=1`) |
 | `run_onchange_before_10-brew-bundle.sh.tmpl` | re-run on change, before | runs `brew bundle` against `Brewfile` |
 | `run_once_after_20-install-claude-code.sh` | run once, after | installs Claude Code via its native installer (see below) |
+| `run_once_after_30-macos-defaults.sh` | run once, after | applies macOS `defaults` (disables the press-and-hold accent popup) |
 
 `Brewfile` lists all packages/casks (regenerate with `brew bundle dump --force`). The
 bundle script embeds the Brewfile's hash, so it re-runs only when the package list changes.
