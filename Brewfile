@@ -4,6 +4,14 @@ brew "chezmoi"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Ambitious Vim-fork focused on extensibility and usability
+brew "neovim"
+# Search tool like grep, but faster (LazyVim dependency: Telescope live-grep)
+brew "ripgrep"
+# Simple, fast and user-friendly alternative to find (LazyVim dependency: Telescope find-files)
+brew "fd"
+# Simple terminal UI for git commands (LazyVim's built-in git integration)
+brew "lazygit"
 # Theme for zsh
 brew "powerlevel10k"
 # Terminal multiplexer
