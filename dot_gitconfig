@@ -7,3 +7,5 @@
 	useHttpPath = true
 [init]
 	defaultBranch = main
+[core]
+	excludesfile = ~/.config/git/ignore
