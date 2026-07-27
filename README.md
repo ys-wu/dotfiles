@@ -1,8 +1,11 @@
 # dotfiles
 
-Personal dotfiles managed with [chezmoi](https://www.chezmoi.io) and backed up to a
-private GitHub repo (`ys-wu/dotfiles`). chezmoi keeps a source copy of each file here
+Personal **macOS** dotfiles managed with [chezmoi](https://www.chezmoi.io) and backed up to a
+public GitHub repo (`ys-wu/dotfiles`). chezmoi keeps a source copy of each file here
 and *applies* it into `$HOME` — no symlinks.
+
+No secrets are tracked here (see [What's NOT tracked](#whats-not-tracked-and-why)) — that's
+what makes it safe to keep public.
 
 ## What's tracked
 
