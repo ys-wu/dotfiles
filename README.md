@@ -12,7 +12,7 @@ and *applies* it into `$HOME` — no symlinks.
 | `dot_p10k.zsh` → `~/.p10k.zsh` | Powerlevel10k prompt |
 | `dot_tmux.conf` → `~/.tmux.conf` | tmux config |
 | `dot_config/ghostty/config` → `~/.config/ghostty/config` | Ghostty terminal |
-| `dot_config/nvim/` → `~/.config/nvim/` | Neovim, configured with [LazyVim](https://www.lazyvim.org) (starter template + `lazy-lock.json` plugin lockfile) |
+| `dot_config/nvim/` → `~/.config/nvim/` | Neovim, configured with [LazyVim](https://www.lazyvim.org) (starter template + `lazy-lock.json` plugin lockfile); tutorial: [LazyVim for Ambitious Devs](https://lazyvim-ambitious-devs.phillips.codes/course/) |
 | `dot_claude/settings.json` → `~/.claude/settings.json` | Claude Code settings |
 | `dot_gitconfig` → `~/.gitconfig` | Git config (credential helper, `useHttpPath`, default branch) |
 | `…/Code/User/settings.json` → VSCode user settings | Editor, integrated-terminal font (Nerd Font), Vim mode (VSCodeVim) |
