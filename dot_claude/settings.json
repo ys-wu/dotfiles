@@ -2,7 +2,6 @@
   "tui": "fullscreen",
   "theme": "dark",
   "editorMode": "vim",
-  "model": "opus",
   "permissions": {
     "defaultMode": "auto"
   }
