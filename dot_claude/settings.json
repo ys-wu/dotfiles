@@ -1,4 +1,9 @@
 {
+  "tui": "fullscreen",
   "theme": "dark",
-  "editorMode": "vim"
+  "editorMode": "vim",
+  "model": "opus",
+  "permissions": {
+    "defaultMode": "auto"
+  }
 }
