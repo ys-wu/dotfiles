@@ -4,5 +4,6 @@
   "editorMode": "vim",
   "permissions": {
     "defaultMode": "auto"
-  }
+  },
+  "enableWorkflows": true
 }
