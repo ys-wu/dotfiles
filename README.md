@@ -13,7 +13,7 @@ what makes it safe to keep public.
 |------|---------|
 | `dot_zshrc` → `~/.zshrc` | Zsh config |
 | `dot_p10k.zsh` → `~/.p10k.zsh` | Powerlevel10k prompt |
-| `dot_tmux.conf` → `~/.tmux.conf` | tmux config |
+| `dot_tmux.conf` → `~/.tmux.conf` | tmux config (prefix `C-a`, vi copy-mode, plugins via TPM) |
 | `dot_config/ghostty/config` → `~/.config/ghostty/config` | Ghostty terminal |
 | `dot_config/nvim/` → `~/.config/nvim/` | Neovim, configured with [LazyVim](https://www.lazyvim.org) (starter template + `lazy-lock.json` plugin lockfile); tutorial: [LazyVim for Ambitious Devs](https://lazyvim-ambitious-devs.phillips.codes/course/) |
 | `dot_claude/settings.json` → `~/.claude/settings.json` | Claude Code settings |
@@ -21,6 +21,24 @@ what makes it safe to keep public.
 | `…/Code/User/settings.json` → VSCode user settings | Editor, integrated-terminal font (Nerd Font), Vim mode (VSCodeVim) |
 
 chezmoi maps `dot_` prefixes to leading dots. List managed files with `chezmoi managed`.
+
+### tmux plugins (chezmoi externals, not `prefix + I`)
+
+`.chezmoiexternal.toml` clones three repos into `~/.tmux/plugins/` on apply, so a fresh
+machine needs no TPM bootstrap step:
+
+| Plugin | What it gives you |
+|--------|-------------------|
+| [tpm](https://github.com/tmux-plugins/tpm) | the plugin loader `~/.tmux.conf` sources on its last line |
+| [tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) | save/restore sessions, windows, panes: `C-a C-s` / `C-a C-r` |
+| [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) | auto-saves every 15 min and auto-restores when tmux starts |
+
+The repos are clones, not tracked content, so nothing third-party lands in this git repo.
+chezmoi re-pulls them at most weekly; force it with `chezmoi apply --refresh-externals`.
+Resurrect's snapshots live in `~/.local/share/tmux/resurrect/` and are `.chezmoiignore`d as
+machine-local state. Adding a plugin means two edits: a `set -g @plugin` line in
+`dot_tmux.conf` **and** a block in `.chezmoiexternal.toml` (keep `tmux-continuum` last in
+the plugin list, as it requires).
 
 ## What's NOT tracked, and why
 

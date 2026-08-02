@@ -1,0 +1,21 @@
+# Third-party repos vendored into $HOME by chezmoi (cloned on apply, not tracked
+# in git). Using externals instead of TPM's interactive `prefix + I` install
+# keeps a fresh machine one `chezmoi apply` away from a working tmux.
+#
+# refreshPeriod: chezmoi re-pulls at most this often (only on `chezmoi apply`);
+# force an update with `chezmoi apply --refresh-externals`.
+
+[".tmux/plugins/tpm"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tpm.git"
+    refreshPeriod = "168h"
+
+[".tmux/plugins/tmux-resurrect"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-resurrect.git"
+    refreshPeriod = "168h"
+
+[".tmux/plugins/tmux-continuum"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tmux-continuum.git"
+    refreshPeriod = "168h"

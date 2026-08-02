@@ -28,6 +28,13 @@ Brewfile
 .claude/downloads
 .claude/plugins
 
+# tmux-resurrect's saved session snapshots (machine-local state). It writes to
+# the XDG path unless ~/.tmux/resurrect already exists, so both are listed.
+# NB: do NOT ignore .tmux/plugins: those are chezmoi externals, and an ignore
+# entry would stop them from being applied.
+.local/share/tmux
+.tmux/resurrect
+
 # History / caches / sockets
 .zsh_history
 .zsh_sessions
