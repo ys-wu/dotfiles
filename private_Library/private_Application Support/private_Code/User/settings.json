@@ -8,5 +8,6 @@
         "<C-c>": false,
         "<C-v>": false
     },
-    "editor.lineNumbers": "relative"
+    "editor.lineNumbers": "relative",
+    "explorer.confirmDelete": false
 }
