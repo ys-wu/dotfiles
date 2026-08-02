@@ -12,6 +12,9 @@ brew "ripgrep"
 brew "fd"
 # Simple terminal UI for git commands (LazyVim's built-in git integration)
 brew "lazygit"
+# Extremely fast Python package installer and resolver, written in Rust
+# (also manages Python versions: `uv python install`)
+brew "uv"
 # Theme for zsh
 brew "powerlevel10k"
 # Terminal multiplexer

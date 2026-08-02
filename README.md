@@ -84,6 +84,10 @@ can then fight the app's built-in updater (brew thinks it's stale; the app alrea
 In the Brewfile (low-conflict, no aggressive self-updater, clean from brew): `1password`,
 `1password-cli`, `shottr`.
 
+- **uv** has a built-in `uv self update`, but the Homebrew build disables it, so there's no
+  updater conflict: upgrade with `brew upgrade uv`. Kept in the Brewfile since it's also the
+  Python-version manager here (`uv python install`), i.e. no separate `python`/`pyenv` entry.
+
 > Note: `chezmoi apply` / `chezmoi update` on an existing machine will run the bundle
 > script when the Brewfile changes — this is idempotent (brew just installs what's missing).
 
