@@ -40,6 +40,25 @@ machine-local state. Adding a plugin means two edits: a `set -g @plugin` line in
 `dot_tmux.conf` **and** a block in `.chezmoiexternal.toml` (keep `tmux-continuum` last in
 the plugin list, as it requires).
 
+### Claude Code's `model` key is deliberately absent
+
+`dot_claude/settings.json` has no `"model"` entry (removed in `8e7e22d`): model aliases
+change over time and the right choice is per-session, so selection is left to `/model`.
+
+Claude Code rewrites `~/.claude/settings.json` itself, and `/model` persists the choice
+there, so the key **will** be present on a machine you've used. That is intentional: the
+pin is machine-local state, so it stays in `$HOME` and out of the repo. The cost is a
+standing `-  "model": ...` line in `chezmoi diff`. It is expected, not accidental drift,
+and there is nothing to fix:
+
+- **Do not** `chezmoi add` the pin back. That re-bakes a model choice into every machine,
+  which is exactly what `8e7e22d` undid.
+- **Do not** blanket `chezmoi apply`, since it strips the live pin as a side effect. Apply
+  specific paths (`chezmoi apply ~/.zshrc`) when other files drift.
+
+Suppressing the line permanently would need a `modify_` script (chezmoi's only
+part-of-a-file mechanism), traded away to keep a literal, reviewable settings file.
+
 ## What's NOT tracked, and why
 
 Secrets and noisy machine-local state are **excluded** (not encrypted) via `.chezmoiignore`:
