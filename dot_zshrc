@@ -37,9 +37,14 @@ function zle-keymap-select {
 zle -N zle-keymap-select
 function zle-line-init { echo -ne '\e[6 q'; }
 zle -N zle-line-init
-function _vi_beam_cursor { echo -ne '\e[6 q'; }
+# Reset to a block before running an external command, so TUIs that never
+# set the cursor themselves (Claude Code) don't inherit the prompt's beam.
+# Outside tmux Ghostty's shell integration already emits `\e[0 q` here and
+# its default is block; inside tmux that integration isn't injected, so this
+# hook is what keeps the two environments consistent.
+function _vi_block_cursor { echo -ne '\e[2 q'; }
 autoload -Uz add-zsh-hook
-add-zsh-hook preexec _vi_beam_cursor
+add-zsh-hook preexec _vi_block_cursor
 
 # ============================================================
 # nvm
