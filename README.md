@@ -88,18 +88,53 @@ KCLI='/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli
 "$KCLI" --list-profile-names   # non-zero if ~/.config/karabiner/karabiner.json won't parse
 ```
 
-**First run on a new machine** needs two GUI approvals that no config file can grant:
+**First run on a new machine** needs three GUI approvals that no config file can grant, in
+this order. Running `open -a Karabiner-Elements` is the least painful route: its settings
+window guides each step with a button that opens the right pane.
 
 1. System Settings → General → Login Items & Extensions → **Driver Extensions**, enable
-   *Karabiner-VirtualHIDDevice*. Until this is done,
-   `systemextensionsctl list | grep pqrs` reports `[activated waiting for user]`, and
-   `karabiner_cli --list-connected-devices` hangs rather than failing, which is the
-   clearest symptom that this step is outstanding.
-2. Grant **Input Monitoring** to `Karabiner-Core-Service` and `Karabiner-Elements` when
-   prompted (v16 names it Core Service, older docs say `karabiner_grabber`).
+   *Karabiner-VirtualHIDDevice*.
+2. Privacy & Security → **Accessibility** → allow `Karabiner-Elements` and
+   `Karabiner-Core-Service`.
+3. Privacy & Security → **Input Monitoring** → same two (v16 names it Core Service, older
+   docs say `karabiner_grabber`).
 
-Leave System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys at its defaults, so
-the two remappers do not stack.
+Also set System Settings → Keyboard → Keyboard Shortcuts → **Modifier Keys** → Caps Lock
+back to `Caps Lock` if it has been remapped. A macOS-level Caps Lock → Escape remap looks
+like a *partly* working setup (tap gives Escape, hold gives Escape too) and is easy to
+mistake for a broken Karabiner rule, since macOS has no notion of tap vs hold. That pane is
+**per keyboard**: work through every device in its "Select keyboard" dropdown, not just the
+one it happens to open on. Audit them all at once instead:
+
+```bash
+defaults -currentHost read -g | grep -A20 modifiermapping
+```
+
+Each device gets its own block. `Src` 30064771129 (`0x700000039`) is Caps Lock; if its
+`Dst` is 30064771113 (`0x700000029`, Escape) rather than itself, that device is remapped.
+Stale blocks for keyboards that are no longer attached are normal and harmless, and one
+keyboard can appear twice if it connects both over Bluetooth and via a USB receiver.
+
+`keyboard_type_v2` is set in the tracked config on purpose. Karabiner refuses to finish
+setup until a keyboard type is chosen, and choosing it in the GUI rewrites `karabiner.json`
+in expanded form; setting it in the file clears the same flag with no click. It applies to
+Karabiner's single *virtual* keyboard (every physical keyboard funnels into it), so it is
+profile-wide with no per-device override. It does not affect the Caps Lock rule: Caps Lock
+is usage `0x39` on ANSI, ISO, and JIS alike. Only genuinely layout-specific keys care
+(`non_us_backslash` on ISO; `kana`/`eisuu`/`yen` on JIS), and for those the tools are
+separate profiles or `device_if` conditions.
+
+Diagnose all of the above in one shot, rather than guessing which step is outstanding:
+
+```bash
+"$KCLI" --show-settings-window-guidance
+```
+
+`current_setup` names the step still blocking; `accessibility_process_trusted` and
+`iohid_listen_event_allowed` must both be `true` before any rule fires; and
+`karabiner_json_parse_error_message` is empty when this repo's config is valid, which
+separates a permissions problem from a config problem. Before the driver is approved,
+`--list-connected-devices` hangs rather than returning an error.
 
 ### Claude Code's `model` key is deliberately absent
 
