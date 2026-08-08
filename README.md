@@ -15,6 +15,7 @@ what makes it safe to keep public.
 | `dot_p10k.zsh` → `~/.p10k.zsh` | Powerlevel10k prompt |
 | `dot_tmux.conf` → `~/.tmux.conf` | tmux config (prefix `C-b`, vi copy-mode, plugins via TPM) |
 | `dot_config/ghostty/config` → `~/.config/ghostty/config` | Ghostty terminal |
+| `dot_config/private_karabiner/karabiner.json` → `~/.config/karabiner/karabiner.json` | Karabiner-Elements (dual-purpose Caps Lock, see below) |
 | `dot_config/nvim/` → `~/.config/nvim/` | Neovim, configured with [LazyVim](https://www.lazyvim.org) (starter template + `lazy-lock.json` plugin lockfile); tutorial: [LazyVim for Ambitious Devs](https://lazyvim-ambitious-devs.phillips.codes/course/) |
 | `dot_claude/settings.json` → `~/.claude/settings.json` | Claude Code settings |
 | `dot_gitconfig` → `~/.gitconfig` | Git config (credential helper, `useHttpPath`, default branch) |
@@ -39,6 +40,66 @@ Resurrect's snapshots live in `~/.local/share/tmux/resurrect/` and are `.chezmoi
 machine-local state. Adding a plugin means two edits: a `set -g @plugin` line in
 `dot_tmux.conf` **and** a block in `.chezmoiexternal.toml` (keep `tmux-continuum` last in
 the plugin list, as it requires).
+
+### Caps Lock: tap for Escape, hold for Control
+
+`dot_config/private_karabiner/karabiner.json` defines one complex modification. Tapped,
+Caps Lock posts `escape`; held, it acts as `left_control`. Caps-locking itself is given up,
+which is the point.
+
+Why Karabiner and not macOS System Settings: the built-in *Modifier Keys* panel can only
+map Caps Lock to Control *permanently*, with no tap behavior. Only a Karabiner complex
+modification can make one key dual-purpose.
+
+How the rule works, key by key:
+
+- `to` + `"lazy": true` holds the Control keydown back until another key is pressed, so a
+  bare Caps Lock tap never leaks a stray Control to the frontmost app.
+- `to_if_held_down` re-posts Control after the threshold, which is what makes Control-click
+  and Control-scroll work (lazy alone would wait forever for a keypress that never comes).
+- Both thresholds are 200 ms: press-and-release under 200 ms is Escape, anything longer is
+  Control. Karabiner's own default for `to_if_alone` is 1000 ms, which is long enough that
+  a deliberate hold still fires Escape on release. Tune both numbers together, and keep
+  them equal, so the tap/hold boundary stays a single point in time.
+- `"modifiers": { "optional": ["any"] }` keeps the rule live while other modifiers are
+  already down, so `⌘⇧`-plus-Caps-Lock still yields Control.
+
+The config is minimal on purpose: Karabiner fills in every key it does not find (profiles,
+devices, function-key rows, `simple_modifications`) *in memory*, and verifiably does not
+write those defaults back, so only the rule that matters is tracked. Changing something in
+the GUI does rewrite the file in full, expanded form, which would show up as a large
+`chezmoi diff`. Prefer editing this file over clicking in the GUI; if you do use the GUI
+and want to keep the result, `chezmoi add ~/.config/karabiner/karabiner.json` and review
+the diff before committing. Karabiner watches the file and reloads on save, so a
+`chezmoi apply` takes effect immediately, with no restart.
+
+The source dir is `private_karabiner`, i.e. mode `0700`, because Karabiner chmods
+`~/.config/karabiner` to `0700` on first launch. Without the `private_` attribute, chezmoi
+would want it `0755` and every `chezmoi diff` would carry a permanent mode-change hunk.
+
+`automatic_backups/` (Karabiner's own snapshot of each GUI change) is `.chezmoiignore`d as
+machine-local state. `assets/` (created on first launch, for downloaded rule files) is
+left unmanaged.
+
+Validate an edit before applying it, with Karabiner's own linter:
+
+```bash
+KCLI='/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli'
+"$KCLI" --list-profile-names   # non-zero if ~/.config/karabiner/karabiner.json won't parse
+```
+
+**First run on a new machine** needs two GUI approvals that no config file can grant:
+
+1. System Settings → General → Login Items & Extensions → **Driver Extensions**, enable
+   *Karabiner-VirtualHIDDevice*. Until this is done,
+   `systemextensionsctl list | grep pqrs` reports `[activated waiting for user]`, and
+   `karabiner_cli --list-connected-devices` hangs rather than failing, which is the
+   clearest symptom that this step is outstanding.
+2. Grant **Input Monitoring** to `Karabiner-Core-Service` and `Karabiner-Elements` when
+   prompted (v16 names it Core Service, older docs say `karabiner_grabber`).
+
+Leave System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys at its defaults, so
+the two remappers do not stack.
 
 ### Claude Code's `model` key is deliberately absent
 
@@ -119,7 +180,15 @@ can then fight the app's built-in updater (brew thinks it's stale; the app alrea
   brew-vs-self-updater noise. Low stakes either way.
 
 In the Brewfile (low-conflict, no aggressive self-updater, clean from brew): `1password`,
-`1password-cli`, `shottr`.
+`1password-cli`, `shottr`, `karabiner-elements`.
+
+- **Karabiner-Elements** self-updates, and the cask is marked `auto_updates`, so
+  `brew upgrade` deliberately skips it (`--greedy` would override, don't bother). It is in
+  the Brewfile anyway, as the exception that proves the rule: it installs a *system driver
+  extension* via a `.pkg`, which is the one install worth automating on a fresh machine
+  even though the approval that follows is manual regardless. brew does the first install;
+  the app handles upgrades from then on. Because it is a `.pkg`, `brew bundle` will prompt
+  for a sudo password on a fresh machine, so that run cannot be fully unattended.
 
 - **uv** has a built-in `uv self update`, but the Homebrew build disables it, so there's no
   updater conflict: upgrade with `brew upgrade uv`. Kept in the Brewfile since it's also the

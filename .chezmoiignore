@@ -35,6 +35,10 @@ Brewfile
 .local/share/tmux
 .tmux/resurrect
 
+# Karabiner-Elements snapshots its config on every GUI change (machine-local
+# state). NB: do NOT ignore .config/karabiner/karabiner.json: that one is tracked.
+.config/karabiner/automatic_backups
+
 # History / caches / sockets
 .zsh_history
 .zsh_sessions

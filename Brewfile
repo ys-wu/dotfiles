@@ -28,6 +28,8 @@ cask "1password-cli"
 cask "font-meslo-lg-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Keyboard customizer (dual-purpose Caps Lock: tap = Escape, hold = Control)
+cask "karabiner-elements"
 # Screenshot measurement and annotation tool
 cask "shottr"
 # Open-source code editor
